@@ -1,34 +1,27 @@
-// src/components/Navbar.js
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { auth } from "../firebase";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-const Navbar = ({ user }) => {
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    await signOut(auth);
-    navigate("/login");
-  };
+const Navbar = () => {
+  const { user, logout } = useAuth();
 
   return (
-    <nav style={{ display: "flex", gap: "15px", padding: "10px", background: "#f0f0f0" }}>
-      <Link to="/">Job Listings</Link>
-      {user ? (
-        <>
-          <Link to="/profile">Profile</Link>
-          <Link to="/employer">Employer Dashboard</Link>
-          <Link to="/accessibility">Accessibility</Link>
-          <button onClick={handleLogout}>Logout</button>
-        </>
-      ) : (
-        <>
-          <Link to="/login">Login</Link>
-          <Link to="/signup">Sign Up</Link>
-          <Link to="/accessibility">Accessibility</Link>
-        </>
-      )}
+    <nav className="bg-blue-600 text-white p-4 flex justify-between items-center">
+      <Link to="/" className="text-xl font-bold">Inclusive Employment</Link>
+      <div className="space-x-4">
+        <Link to="/jobs" className="hover:underline">Jobs</Link>
+        {user ? (
+          <>
+            <Link to="/dashboard" className="hover:underline">Dashboard</Link>
+            <Link to="/profile" className="hover:underline">Profile</Link>
+            <button onClick={logout} className="bg-red-500 px-4 py-2 rounded">Logout</button>
+          </>
+        ) : (
+          <>
+            <Link to="/signin" className="hover:underline">Sign In</Link>
+            <Link to="/signup" className="hover:underline">Sign Up</Link>
+          </>
+        )}
+      </div>
     </nav>
   );
 };
